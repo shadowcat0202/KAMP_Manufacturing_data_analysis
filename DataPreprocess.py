@@ -58,10 +58,10 @@ class DataPreprocess():
 
         # TAG 칼럼명을 OK?로 변경후 원핫인코딩
         df_prcd['TAG'].replace({'OK':1, 'NG':0}, inplace=True)
-        df_prcd.rename(columns={'TAG':'OK?'}, inplace=True)
+        df_prcd.rename(columns={'TAG':'OK'}, inplace=True)
 
         # 칼럼 재정렬
-        df_prcd = df_prcd[['DATE_TIME', "MELT_TEMP", "MOTORSPEED", "MELT_WEIGHT", "INSP", "OK?"]]
+        df_prcd = df_prcd[['DATE_TIME', "MELT_TEMP", "MOTORSPEED", "MELT_WEIGHT", "INSP", "OK"]]
 
         return df_prcd
 
