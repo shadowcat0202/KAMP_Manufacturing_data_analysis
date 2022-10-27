@@ -39,8 +39,7 @@ class GlanceViz(DataPreprocess):
         for i, col_date in enumerate(ls_dateCols):
             df_part = df[[col_date, self.name_target]]
             grp = df_part.groupby([col_date], as_index=False).mean()
-            # grp = grp
-            print(grp)
+
             sns.barplot(x=grp[col_date], y=grp[self.name_target], ax=ax[i])
             # sns.lineplot(x=grp[col_date], y=grp[self.name_target], ax=ax[i])
         f.tight_layout()
@@ -60,8 +59,7 @@ class GlanceViz(DataPreprocess):
             df_part = df[[col_date, 'MELT_WEIGHT']]
             grp = df_part.groupby([col_date], as_index=False).min()
             # grp = df_part.groupby([col_date], as_index=False).mean()
-            # grp = grp
-            print(grp)
+
             sns.barplot(x=grp[col_date], y=grp["MELT_WEIGHT"], ax=ax[i])
             # sns.lineplot(x=grp[col_date], y=grp[self.name_target], ax=ax[i])
         f.tight_layout()
@@ -78,10 +76,16 @@ class GlanceViz(DataPreprocess):
 
 
         ax1, ax2 = plt.gca(), plt.gca().twinx()
+        # 불량인 곳 체크
+        sns.scatterplot(x='DATE_TIME', y='OK', data= df_part[df_part['OK']==0], ax=ax1, color='b', label = "NG", alpha=0.9, markers='X')
+
+        # MELT_WEIGHT 플랏 및 WEIGHT 0인곳은 마커로 표시
         sns.lineplot(x=df_part['DATE_TIME'], y=df_part['MELT_WEIGHT'], ax=ax1, color='r', label = "WEIGHT", alpha=0.9)
-        sns.lineplot(x=df_part_w0['DATE_TIME'], y=df_part_w0['MELT_WEIGHT'], ax=ax1, color='r', label = "WEIGHT(0)", alpha=0.9, markers='x', linewidth=0.5)
+        sns.scatterplot(x=df_part_w0['DATE_TIME'], y=df_part_w0['MELT_WEIGHT'], ax=ax1, color='r', label = "WEIGHT(0)", alpha=0.9, markers='x')
+
+        # MOTORSPEED 플랏 및 SPEED 0인곳은 마커로 표시
         sns.lineplot(x=df_part['DATE_TIME'], y=df_part['MOTORSPEED'], ax=ax2, color='y', label="MOTORSPEED", alpha=0.2)
-        sns.lineplot(x=df_part_s0['DATE_TIME'], y=df_part_s0['MOTORSPEED'], ax=ax2, color='y', label="MOTORSPEED(0)", alpha=0.2, markers='x', linewidth=0.5)
+        sns.scatterplot(x=df_part_s0['DATE_TIME'], y=df_part_s0['MOTORSPEED'], ax=ax2, color='y', label="MOTORSPEED(0)", alpha=0.2, markers='x')
         plt.legend(loc='right')
         plt.show()
 
@@ -90,4 +94,10 @@ gv = GlanceViz()
 # gv.BOXPLOT_DFPRCD_VARS_BYTIME()
 # gv.PLOT_DFPRCD_OKPROB_BYTIME()
 # gv.PLOT_DFPRCD_WEIGHT_BYTIME()
-gv.plot_dfprcd_byTime(month= 3, day= 4, hour_from=0 , hour_to= 0)
+# gv.plot_dfprcd_byTime(month= 3, day= 4, hour_from=0 , hour_to= 0)
+
+# WEIGHT 급증구간 확인
+gv.plot_dfprcd_byTime(month= 3, day= 11, hour_from=22 , hour_to= 22)
+
+# 불량구간 확인
+# gv.plot_dfprcd_byTime(month= 3, day= 22, hour_from=12 , hour_to= 12)

@@ -18,3 +18,15 @@ class NewFeatures():
 
         return df
 
+    def calculate_change_columns(self, df, colName_from, colName_new):
+        """
+        주어진 데이터 프레임 내 칼럼의 행 간 변화량을 계산함 [val*100(%)]. 첫 행 NaN은 0으로 표기
+        :param df:
+        :param colName_from:
+        :param colName_new:
+        :return:
+        """
+        df[colName_new] = df[colName_from].pct_change(periods=1)*100
+        df[colName_new].fillna(0, inplace=True)
+
+        return df

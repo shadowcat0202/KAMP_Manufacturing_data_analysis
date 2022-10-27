@@ -1,3 +1,5 @@
+import datetime
+
 import pandas as pd
 
 from DataPreProcess_1DataLoad import DataLoad
@@ -11,19 +13,8 @@ dc = DataCleaning() # 데이터 정제하는 클래스
 dt = DataTransformation() # 데이터 변환하는 클래스
 nf = NewFeatures()
 
-updated = f"10.26.22"
-note = """ 
-** 업데이트 내역/예정**
-(예정)
-- 이상치(outliers) 제거
-
-(10.26.22)
-- NUM 값을 초로 변경 (10.26.22)
-- 온도, 회전속도에 0.1 곱함 (10.26.22)
-- TAG 칼럼명을 OK로 변경 후 값 변경 {'OK':1, 'NG':0} (10.26.22)
-* END *
-"""
-ver_msg = f"[전처리데이터] LAST UPDATED ON {updated}\n{note}"
+updated = f"10.27.22"
+ver_msg = f"[전처리데이터] LAST UPDATED ON {updated}"
 
 class DataPreprocess():
     def __init__(self):
@@ -71,14 +62,26 @@ class DataPreprocess():
 
         # 날짜/시간 칼럼을 가지고 월/주/일/시간 등의 칼럼 추가
         df_prcd = nf.expand_date_columns(df_prcd)
+        df_prcd = nf.calculate_change_columns(df_prcd, 'MELT_WEIGHT', 'CHG_MELT_WEIGHT')
+        # df_prcd['CHG_MELT_WEIGHT'] = df_prcd['MELT_WEIGHT'].pct_change(periods=1)*100
 
         return df_prcd
 
 
+# 테스트 공간
 
 df_org = DataLoad().df_org
 df_prcd = DataPreprocess().df_prcd
 
-print(df_prcd['OK'].value_counts())
-# print(df_prcd.head(), df_prcd.tail(),'\n', df_prcd.columns.tolist())
-# print(df['TAG'].value_counts())
+# print(df_prcd[['MELT_WEIGHT', "CHG_MELT_WEIGHT"]])
+# pd.set_option('display.max_columns', None)
+# pd.set_option('display.max_rows', None)
+
+df_ols = df_prcd.loc[df_prcd['MELT_WEIGHT'] > 10000]
+# print(df_ols)
+
+print(df_prcd[df_prcd['DATE'] == datetime.datetime(2020, 3, 11).date()][['DATE_TIME', 'MELT_WEIGHT', "CHG_MELT_WEIGHT"]])
+
+
+# df_zero = df_prcd.loc[df_prcd['MELT_WEIGHT'] == 0]
+# print(df_zero[['DATE_TIME', 'MELT_WEIGHT', "CHG_MELT_WEIGHT"]])
