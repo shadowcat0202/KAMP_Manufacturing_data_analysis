@@ -15,4 +15,4 @@ class ShowAutoviz(DataPreprocess):
                    max_rows_analyzed= df_prcd.shape[0],
                    max_cols_analyzed= df_prcd.shape[1])
 
-# ShowAutoviz()
+ShowAutoviz()

@@ -1,6 +1,11 @@
 # pip install pyod
+# pip install kats
 
 from DataPreProcess_1DataLoad import DataLoad
+
+# from pyod.utils.example import visualize
+# from pyod.utils.data import evaluate_print
+# from pyod.models.knn import KNN
 
 """
 데이터 클리닝
@@ -31,3 +36,24 @@ class DataCleaning(DataLoad):
         result = True if self.df_org.duplicated().sum() == 0 else False
         return result
 
+    # def outliers(self):
+    #     clf_name = 'KNN'
+    #     clf = KNN()
+    #     clf.fit(self.df_org)
+
+#
+# df = DataLoad().df_org
+# df = DataLoad().df_prcd
+
+# df_part = df[['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'TAG']]
+# df_part['TAG'] = df_part['TAG'].replace({'OK':1, "NG":0})
+# # print(df.columns.tolist())
+# print(df_part)
+# clf_name = 'KNN'
+# clf = KNN()
+# clf.fit(df_part)
+#
+# df_part['Outlier'] = clf.labels_
+# print(df_part.value_counts())
+
+# visualize(clf_name, )
