@@ -1,6 +1,11 @@
 # pip install pyod
+# pip install kats
 
 from DataPreProcess_1DataLoad import DataLoad
+
+# from pyod.utils.example import visualize
+# from pyod.utils.data import evaluate_print
+# from pyod.models.knn import KNN
 
 """
 데이터 클리닝
