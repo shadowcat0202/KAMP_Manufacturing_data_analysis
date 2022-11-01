@@ -70,17 +70,17 @@ class DataPreprocess():
 
 # 테스트 공간
 
-df_org = DataLoad().df_org
-df_prcd = DataPreprocess().df_prcd
+# df_org = DataLoad().df_org
+# df_prcd = DataPreprocess().df_prcd
 
 # print(df_prcd[['MELT_WEIGHT', "CHG_MELT_WEIGHT"]])
 # pd.set_option('display.max_columns', None)
 # pd.set_option('display.max_rows', None)
 
-df_ols = df_prcd.loc[df_prcd['MELT_WEIGHT'] > 10000]
+# df_ols = df_prcd.loc[df_prcd['MELT_WEIGHT'] > 10000]
 # print(df_ols)
 
-print(df_prcd[df_prcd['DATE'] == datetime.datetime(2020, 3, 11).date()][['DATE_TIME', 'MELT_WEIGHT', "CHG_MELT_WEIGHT"]])
+# print(df_prcd[df_prcd['DATE'] == datetime.datetime(2020, 3, 11).date()][['DATE_TIME', 'MELT_WEIGHT', "CHG_MELT_WEIGHT"]])
 
 
 # df_zero = df_prcd.loc[df_prcd['MELT_WEIGHT'] == 0]
