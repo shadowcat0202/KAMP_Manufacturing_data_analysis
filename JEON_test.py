@@ -90,9 +90,9 @@ def test_f():
 
     smote = SMOTE(random_state=0)
     X_train_over, y_train_over = smote.fit_resample(X_train_values, y_train_values)
-    print(f"SMOTE 적용 전 {X_train_values.shape}, {y_train_values.shape}")
-    print(f"SMOTE 적용 후 {X_train_over.shape}, {y_train_over.shape}")
-    print(f"적용 후 레이블 값 분포\n{pd.Series(y_train_over).value_counts()}")
+    # print(f"SMOTE 적용 전 {X_train_values.shape}, {y_train_values.shape}")
+    # print(f"SMOTE 적용 후 {X_train_over.shape}, {y_train_over.shape}")
+    # print(f"적용 후 레이블 값 분포\n{pd.Series(y_train_over).value_counts()}")
 
     # 데이터 프레임
     train_feature, train_label = make_dataset(X_train_over, y_train_over, 10, set_columns)
@@ -152,5 +152,19 @@ def test_f():
     print(f"accuracy: %0.4f" % acc)
 
 
+def exist_missing(_df):
+    return _df.isnull().sum() != 0
+
+
+def exist_duplicates(_df):
+    return _df.duplicated().sum() != 0
+
+
+def pandas_test():
+    df = pd.read_csv('./dataset/dataset.csv')
+    print(exist_missing(df))
+
+
 if __name__ == '__main__':
-    test_f()
+    # test_f()
+    pandas_test()
