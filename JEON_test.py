@@ -68,11 +68,12 @@ def test_f():
 
     # 전처리된 데이터프레임
     df = dp.df_prcd
-    # df.info()
-
+    print('df_prcd columns')
+    df.info()
     # set_columns = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'CHG_MELT_WEIGHT', 'OK']
     set_columns = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'OK']
     dataset = df[set_columns]
+    dataset = dataset.fillna(method='bfill')
     dataset.info()
 
     split_num = int(dataset.shape[0] * 0.7)
@@ -82,7 +83,7 @@ def test_f():
     # train = categorical_encoder(train)    # 타입 문제인지 확인하려고 만들었던 함수(타입 문제가 아니라 값의 음수 문제)
 
     scaler = preprocessing.MinMaxScaler()
-    train_sc = scaler.fit_transform(train)  # 'CHG_MELT_WEIGHT'가 음수가 있기 때문에 오류가 나는 것으로 보임
+    train_sc = scaler.fit_transform(train)  # 'CHG_MELT_WEIGHT' 0 또는 nan 존재
     test_sc = scaler.transform(test)
 
     X_train_values = train_sc[:, :-1]
@@ -122,7 +123,7 @@ def test_f():
 
     history = model.fit(x_train, y_train,
                         epochs=100,
-                        batch_size=50,
+                        batch_size=500,
                         validation_data=(x_valid, y_valid),
                         callbacks=[early_stop, checkpoint])
 
@@ -166,5 +167,5 @@ def pandas_test():
 
 
 if __name__ == '__main__':
-    # test_f()
-    pandas_test()
+    test_f()
+    # pandas_test()
