@@ -89,15 +89,21 @@ class GlanceViz(DataPreprocess):
         plt.legend(loc='right')
         plt.show()
 
+    def plot_dfprcd_distribution(self, df, colName):
+        sns.kdeplot(df[colName])
+        plt.show()
+
 
 gv = GlanceViz()
+df = DataPreprocess().df_prcd
 # gv.BOXPLOT_DFPRCD_VARS_BYTIME()
 # gv.PLOT_DFPRCD_OKPROB_BYTIME()
 # gv.PLOT_DFPRCD_WEIGHT_BYTIME()
 # gv.plot_dfprcd_byTime(month= 3, day= 4, hour_from=0 , hour_to= 0)
 
 # WEIGHT 급증구간 확인
-gv.plot_dfprcd_byTime(month= 3, day= 11, hour_from=22 , hour_to= 22)
+# gv.plot_dfprcd_byTime(month= 3, day= 11, hour_from=22 , hour_to= 22)
 
 # 불량구간 확인
-# gv.plot_dfprcd_byTime(month= 3, day= 22, hour_from=12 , hour_to= 12)
+gv.plot_dfprcd_byTime(month= 3, day= 30, hour_from=12 , hour_to= 14)
+# gv.plot_dfprcd_distribution(df, 'MELT_WEIGHT')

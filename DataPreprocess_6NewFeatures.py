@@ -26,7 +26,7 @@ class NewFeatures():
         :param colName_new:
         :return:
         """
-        df[colName_new] = df[colName_from].pct_change(periods=1)*100
+        df[colName_new] = df[colName_from].pct_change(periods=1)
         df[colName_new].fillna(0, inplace=True)
 
         return df
