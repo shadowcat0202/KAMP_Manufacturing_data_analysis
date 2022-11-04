@@ -166,6 +166,46 @@ def pandas_test():
     print(exist_missing(df))
 
 
+def find_cycle(_df):
+    print(_df.info())
+
+    MW = _df[['DATE_TIME', 'MELT_WEIGHT']]
+    # print(MELT_WEIGHT)
+
+    MELT_WEIGHT_under_200 = MW['MELT_WEIGHT'] < 200
+
+    cycle_info = []
+    MW['CYCLE'] = False
+    t1 = None
+    t2 = None
+    for idx in range(1, len(MW)):
+        if not MELT_WEIGHT_under_200[idx - 1] and MELT_WEIGHT_under_200[idx]:  # 구간의 시작
+            t1 = idx
+        elif MELT_WEIGHT_under_200[idx - 1] and not MELT_WEIGHT_under_200[idx]:
+            t2 = idx - 1
+            # print(f'{t1}~{t2}')
+            # 구간 찾음
+            min_val_idx = MW.loc[t1:t2, 'MELT_WEIGHT'].idxmin()
+            MW.loc[min_val_idx, 'CYCLE'] = True
+
+    # print(MW['CYCLE'].value_counts())
+    plt.plot(MW['DATE_TIME'], MW['MELT_WEIGHT'])
+    # plt.plot(MW['DATE_TIME'], cy['MELT_WEIGHT'], 'ro')
+    plt.scatter(MW[MW['CYCLE'] == True]['DATE_TIME'].tolist(),
+                MW[MW['CYCLE'] == True]['MELT_WEIGHT'].tolist(),
+                marker='o', color='red')
+    plt.show()
+
+
+
+
 if __name__ == '__main__':
-    test_f()
+    # 데이터프레임 전처리용 클래스
+    dp = DataPreprocess()
+    # 전처리된 데이터프레임
+    df = dp.df_prcd
+    df = df.fillna(method='bfill')
+
+    # test_f()
+    find_cycle(df)
     # pandas_test()

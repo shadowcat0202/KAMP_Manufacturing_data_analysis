@@ -40,7 +40,8 @@ def num_to_sec(_df, _info=False, _from=None, _to=None):
         print(_df[_to])
     return _df
 
-def make_24_time_combine_datetime_and_sec(_df, _info=False, _datetime_col=None, _sec_col=None)
+def make_24_time_combine_datetime_and_sec(_df, _info=False, _datetime_col=None, _sec_col=None):
+    pass
 
 def pandas_test():
     df_origin = data_Loader('./dataset/dataset.csv', _info=False)
