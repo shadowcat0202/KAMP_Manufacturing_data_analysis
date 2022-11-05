@@ -27,17 +27,16 @@ class DataPreprocess():
 
         # 최종결과물: 전처리 된 데이터 프레임 (_prcd == processed == 처리된)
         self.df_prcd = self.processed_dataframe()
-        # self.grp_date = self.df_prcd_grpByDate()
-        # print(ver_msg)
 
 
     def processed_dataframe(self):
         df_prcd = dc.df_clnd.copy()
-        print(F"이곳은 클리닝. {df_prcd.columns.tolist()}")
+
+
+        # df_prcd = dc.df_clnd.copy()
 
         # NUM을 초(second)로 변환
         df_prcd = dt.transfCol_num2sec(df_prcd, colName_old='NUM', colName_new='SEC')
-        print(F"이곳은 NUM2SEC. {df_prcd.columns.tolist()}")
         """
         * 이유/근거 - 데이터셋 가이드북 p.8
         "수집주기 : 사이클타임 약 6초" >> row(NUM) 별로 6초의 간격이 있음. 따라서 시점의 초로 활용가능함 
@@ -56,36 +55,10 @@ class DataPreprocess():
         # TAG 칼럼명을 OK?로 변경후 원핫인코딩
         df_prcd = dt.replaceCol_withDict(df_prcd, colName_old='TAG', colName_new=self.name_target, dict= {'OK':1, 'NG':0})
 
-        # df_prcd['TAG'].replace({'OK':1, 'NG':0}, inplace=True)
-        # df_prcd.rename(columns={'TAG':'OK'}, inplace=True)
-
-        # 칼럼 재정렬
-        # df_prcd = df_prcd[['DATE_TIME', "MELT_TEMP", "MOTORSPEED", "MELT_WEIGHT", "INSP", "OK"]]
 
         # 날짜/시간 칼럼을 가지고 월/주/일/시간 등의 칼럼 추가
         df_prcd = nf.expand_date_columns(df_prcd)
-        # df_prcd = nf.calculate_change_columns(df_prcd, 'MELT_WEIGHT', 'CHG_MELT_WEIGHT')
-        # df_prcd['CHG_MELT_WEIGHT'] = df_prcd['MELT_WEIGHT'].pct_change(periods=1)*100
-        # df_prcd['CYCLE']
-
-        print(f"끝: {df_prcd.columns.tolist()}")
-
 
         return df_prcd
 
 
-# 테스트 공간
-# dp = DataPreprocess()
-# df = dp.df_prcd
-# print(df)
-# print(df.columns.tolist())
-# print(dp.df_org.groupby(['TAG'], as_index=False).agg({"MELT_WEIGHT":['min', 'max', 'mean', 'median', 'std', 'count']}))
-
-# idx_cycleEnd = df[df['MELT_WEIGHT']== 0].index.tolist()
-# ls = []
-# for i, idx in enumerate(idx_cycleEnd):
-#     if i>0:
-#         val = idx_cycleEnd[i] - idx_cycleEnd[i-1]
-#         ls.append(val)
-#
-# print(sorted(ls))
