@@ -21,5 +21,5 @@ class ShowAutoviz(DataPreprocess):
                    max_rows_analyzed= df.shape[0],
                    max_cols_analyzed= df.shape[1])
 
-ShowAutoviz().RUN_AUTOVIZ()
+# ShowAutoviz().RUN_AUTOVIZ()
 
