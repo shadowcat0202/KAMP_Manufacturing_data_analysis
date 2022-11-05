@@ -66,13 +66,13 @@ class GlanceViz(DataPreprocess):
         f.suptitle(f"MELT_WEIGHT PROBABILITY BY TIME")
         plt.show()
 
-    def plot_dfprcd_byTime(self, month, day, hour_from, hour_to):
+    def plot_dfprcd_byTime(self, month, day, hour_from, hour_to, feature_name):
         df = self.df_prcd
         user_date = datetime(2020, month, day).date()
         df_part = df[(df['DATE'] == user_date) & (df['HOUR'] >= hour_from) & (df['HOUR'] <= hour_to)]
 
         df_part_w0 = df_part[df_part['MELT_WEIGHT']==0]
-        df_part_s0 = df_part[df_part['MOTORSPEED']==0]
+        df_part_s0 = df_part[df_part[feature_name]==0]
 
 
         ax1, ax2 = plt.gca(), plt.gca().twinx()
@@ -84,8 +84,8 @@ class GlanceViz(DataPreprocess):
         sns.scatterplot(x=df_part_w0['DATE_TIME'], y=df_part_w0['MELT_WEIGHT'], ax=ax1, color='r', label = "WEIGHT(0)", alpha=0.9, markers='x')
 
         # MOTORSPEED 플랏 및 SPEED 0인곳은 마커로 표시
-        sns.lineplot(x=df_part['DATE_TIME'], y=df_part['MOTORSPEED'], ax=ax2, color='y', label="MOTORSPEED", alpha=0.2)
-        sns.scatterplot(x=df_part_s0['DATE_TIME'], y=df_part_s0['MOTORSPEED'], ax=ax2, color='y', label="MOTORSPEED(0)", alpha=0.2, markers='x')
+        sns.lineplot(x=df_part['DATE_TIME'], y=df_part[feature_name], ax=ax2, color='y', label=feature_name, alpha=0.2)
+        sns.scatterplot(x=df_part_s0['DATE_TIME'], y=df_part_s0[feature_name], ax=ax2, color='y', label=f"{feature_name}(0)", alpha=0.2, markers='x')
         plt.legend(loc='right')
         plt.show()
 
