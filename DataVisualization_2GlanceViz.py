@@ -9,25 +9,6 @@ class GlanceViz(DataPreprocess):
     def __init__(self):
         super().__init__()
 
-    #
-    # def BOXPLOT_DFPRCD_VARS_BYTIME(self):
-    #     """
-    #     전처리된 데이터 프레임을 기반으로 기간/시간별 변수들의 형태를 시각화
-    #     :return: NONE
-    #     """
-    #     ls_dateCols = self.ls_newDtCols
-    #     ls_varCols = self.ls_vars
-    #
-    #     df = self.df_prcd
-    #
-    #     for i, col_var in enumerate(ls_varCols):
-    #         f, ax = plt.subplots(1, len(ls_dateCols), figsize=(20,10))
-    #         for j, col_dt in enumerate(ls_dateCols):
-    #             sns.boxplot(x=df[col_dt], y=df[col_var], ax=ax[j])
-    #         f.tight_layout()
-    #         f.suptitle(f'{col_var} by date type data')
-    #         plt.show()
-
     def PLOT_DFPRCD_OKPROB_BYTIMEFORMATS(self):
         """
         전처리된 데이터프레임을 기반으로 기간/시간별 OK 비율을 보여주는 그래프
@@ -46,46 +27,6 @@ class GlanceViz(DataPreprocess):
         f.tight_layout()
         f.suptitle(f"{self.name_target} PROBABILITY BY TIME")
         plt.show()
-    #
-    # def PLOT_DFPRCD_WEIGHT_BYTIME(self):
-    #     """
-    #     전처리된 데이터프레임을 기반으로 기간/시간별 OK 비율을 보여주는 그래프
-    #     :return: NONE
-    #     """
-    #     ls_dateCols = self.ls_newDtCols
-    #     df = self.df_prcd
-    #
-    #     f, ax = plt.subplots(1, len(ls_dateCols), figsize=(20, 10))
-    #     for i, col_date in enumerate(ls_dateCols):
-    #         df_part = df[[col_date, 'MELT_WEIGHT']]
-    #         grp = df_part.groupby([col_date], as_index=False).min()
-    #         # grp = df_part.groupby([col_date], as_index=False).mean()
-    #
-    #         sns.barplot(x=grp[col_date], y=grp["MELT_WEIGHT"], ax=ax[i])
-    #         # sns.lineplot(x=grp[col_date], y=grp[self.name_target], ax=ax[i])
-    #     f.tight_layout()
-    #     f.suptitle(f"MELT_WEIGHT PROBABILITY BY TIME")
-    #     plt.show()
-    # #
-    # def PLOT_DFPRCD_WEIGHT_BYTIME(self):
-    #     """
-    #     전처리된 데이터프레임을 기반으로 기간/시간별 OK 비율을 보여주는 그래프
-    #     :return: NONE
-    #     """
-    #     ls_dateCols = self.ls_newDtCols
-    #     df = self.df_prcd
-    #
-    #     f, ax = plt.subplots(1, len(ls_dateCols), figsize=(20, 10))
-    #     for i, col_date in enumerate(ls_dateCols):
-    #         df_part = df[[col_date, 'MELT_WEIGHT']]
-    #         grp = df_part.groupby([col_date], as_index=False).min()
-    #         # grp = df_part.groupby([col_date], as_index=False).mean()
-    #
-    #         sns.barplot(x=grp[col_date], y=grp["MELT_WEIGHT"], ax=ax[i])
-    #         # sns.lineplot(x=grp[col_date], y=grp[self.name_target], ax=ax[i])
-    #     f.tight_layout()
-    #     f.suptitle(f"MELT_WEIGHT PROBABILITY BY TIME")
-    #     plt.show()
 
     def plot_NG_byTwoFeatures(self, colName_feat1, colName_feat2, period = 'ALL', drawLine_at= ('ax2', 0), y_min=None, load_dfORG = False):
         """
@@ -185,30 +126,6 @@ class GlanceViz(DataPreprocess):
         f.tight_layout()
         f.suptitle(f'{colName_feat} by date type data')
         plt.show()
-    #
-    # def boxplot_featur_byTimeFormats(self, colName_feat, load_dfORG=False):
-    #     """
-    #     전처리된 데이터프레임을 기반으로 기간/시간별 OK 비율을 보여주는 그래프
-    #     :return: NONE
-    #     """
-    #     ls_dateCols = self.ls_newDtCols
-    #
-    #     if load_dfORG is False:
-    #         df = self.df_prcd
-    #     else:
-    #         df = self.df_org
-    #
-    #     f, ax = plt.subplots(1, len(ls_dateCols), figsize=(20, 10))
-    #     for i, col_date in enumerate(ls_dateCols):
-    #         df_part = df[[col_date, self.name_target]]
-    #         grp = df_part.groupby([col_date], as_index=False).mean()
-    #
-    #         sns.barplot(x=grp[col_date], y=grp[self.name_target], ax=ax[i])
-    #         # sns.lineplot(x=grp[col_date], y=grp[self.name_target], ax=ax[i])
-    #     f.tight_layout()
-    #     f.suptitle(f"{self.name_target} PROBABILITY BY TIME")
-    #     plt.show()
-
 
     def plot_dfprcd_distribution(self, df, colName):
         sns.kdeplot(df[colName])
