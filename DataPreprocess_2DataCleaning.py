@@ -15,8 +15,9 @@ import Errors
 - 진단
     - missing values 존재하지 않음
     - duplicate data 존재하지 않음
-    
+
 """
+
 
 class DataCleaning(DataLoad):
     def __init__(self):
@@ -70,7 +71,6 @@ class DataCleaning(DataLoad):
 
         return output
 
-
     def correct_outliers_withThymeBoost(self, df, col_name, newCol_name, show=False):
         """
         ThymeBoost를 이용하여 아웃라이어 탐지. 이후 아웃라이어는 np.NaN 변환 및 칼럼 생성 후 1표기 (아닐경우 0). 이후 fillna
@@ -96,7 +96,7 @@ class DataCleaning(DataLoad):
         # True/False로 기록된 아웃라이어 여부를 0, 1로 치환하여 OUTLIER_TB 칼럼 생성 후 저장
         colName_outliers = f"{col_name}"
         df[newCol_name] = output['outliers']
-        df[newCol_name].replace({True:1, False:0}, inplace=True)
+        df[newCol_name].replace({True: 1, False: 0}, inplace=True)
 
         # TB 결과를 시각화하고싶다면
         if show is True:
@@ -110,7 +110,7 @@ class DataCleaning(DataLoad):
         # 처리 전/후 시각화
         if show is True:
             fig_title = "THYMEBOOST (BEFORE/AFTER)"
-            self.plot_before_after(data_org, df[col_name],figure_name= fig_title)
+            self.plot_before_after(data_org, df[col_name], figure_name=fig_title)
 
         return df
 
@@ -120,26 +120,26 @@ class DataCleaning(DataLoad):
         data_org = df[col_name].copy()
 
         # 새로운 칼럼들의 이름 생성
-        colName_diffPrev = f"(DIFFPREV)" #이전 행의 값과 차이
-        colName_diffNext = f"(DIFFNEXT)" # 다음 행의 값과 차이
-        colName_diffTotal = f"(DIFFTOTAL)" # 이전행/다음행 값의 합
+        colName_diffPrev = f"(DIFFPREV)"  # 이전 행의 값과 차이
+        colName_diffNext = f"(DIFFNEXT)"  # 다음 행의 값과 차이
+        colName_diffTotal = f"(DIFFTOTAL)"  # 이전행/다음행 값의 합
 
         # OUTLIER 0, 1로 표기할 신규 칼럼 생성. 기본값 0
         df[newCol_name] = 0
 
         # 전행과 차이값 칼럼 추가
-        df[colName_diffPrev] = df[col_name].diff(periods=1).pow(2) # 이전값과 차이 제곱 (큰 차이를 더 극대화하기 위해) 칼럼생성
-        df[colName_diffNext] = df[colName_diffPrev].shift(-1) # 다음값과 차이 제곱 칼럼 생성
-        df[colName_diffTotal] = df[[colName_diffPrev, colName_diffNext]].sum(axis=1) # 이전값 차이 제곱과 다음값 차이 제곱을 더한 칼럼 생성
+        df[colName_diffPrev] = df[col_name].diff(periods=1).pow(2)  # 이전값과 차이 제곱 (큰 차이를 더 극대화하기 위해) 칼럼생성
+        df[colName_diffNext] = df[colName_diffPrev].shift(-1)  # 다음값과 차이 제곱 칼럼 생성
+        df[colName_diffTotal] = df[[colName_diffPrev, colName_diffNext]].sum(axis=1)  # 이전값 차이 제곱과 다음값 차이 제곱을 더한 칼럼 생성
 
         # Shift로 NaN이 생긴 칼럼은 0으로 대체
         df.fillna(0, inplace=True)
 
         # 표준화값을 구한 후 새로운 칼럼(STD) 생성 후 값 저장
-        df['(STD)'] = (df[colName_diffTotal] -  df[colName_diffTotal].mean())/df[colName_diffTotal].std()
+        df['(STD)'] = (df[colName_diffTotal] - df[colName_diffTotal].mean()) / df[colName_diffTotal].std()
 
         # 주어진 시그마를 넘는 값은 np.NaN으로 변환. 이후 ffill 처리
-        df.loc[df['(STD)'].abs() >= sigma, [col_name, newCol_name] ] = [np.nan, 1]
+        df.loc[df['(STD)'].abs() >= sigma, [col_name, newCol_name]] = [np.nan, 1]
         df[col_name] = self.fill_withFfill(df, col_name)
 
         # 임시로 생성한 칼럼들은 삭제
@@ -160,21 +160,21 @@ class DataCleaning(DataLoad):
         df[newCol_name] = 0
 
         # 주어진 조건의 윈도우 생성. 이동평균값과 관측값의 차이를 제곱. 이후 표준화처리
-        df['(MA)'] = df[col_name].rolling(interval, min_periods=1, center=True).mean() # 윈도우 생성 (관측값이 중앙으로)
-        df['(MA-MSE)'] = (df[col_name] - df['(MA)']).pow(2) # 이동평균과 관측값의 차이를 제곱
-        df['(MA-MSE)'] = (df['(MA-MSE)'] - df['(MA-MSE)'].mean())/df['(MA-MSE)'].std() #  차이값의 제곱을 표준화
+        df['(MA)'] = df[col_name].rolling(interval, min_periods=1, center=True).mean()  # 윈도우 생성 (관측값이 중앙으로)
+        df['(MA-MSE)'] = (df[col_name] - df['(MA)']).pow(2)  # 이동평균과 관측값의 차이를 제곱
+        df['(MA-MSE)'] = (df['(MA-MSE)'] - df['(MA-MSE)'].mean()) / df['(MA-MSE)'].std()  # 차이값의 제곱을 표준화
 
         # 주어진 시그마 이상의 값은 NaN으로 처리. 이후 ffill 처리
-        df.loc[df['(MA-MSE)'].abs() >= sigma, [col_name, newCol_name]] = [np.nan, 1] # 주어진 시그마 이상의 표준화된 값은 NaN처리
-        df[col_name] = self.fill_withFfill(df, col_name) # NaN을 ffill 처리
+        df.loc[df['(MA-MSE)'].abs() >= sigma, [col_name, newCol_name]] = [np.nan, 1]  # 주어진 시그마 이상의 표준화된 값은 NaN처리
+        df[col_name] = self.fill_withFfill(df, col_name)  # NaN을 ffill 처리
 
         # 임시로 생성한 칼럼들 드랍
-        df.drop(columns = ['(MA)', '(MA-MSE)'], inplace=True)
+        df.drop(columns=['(MA)', '(MA-MSE)'], inplace=True)
 
         # 처리 전/후 시각화
         if show is True:
             fig_title = f"Moving Average[{col_name}] (interval {interval}, sigma {sigma}) Before/After"
-            self.plot_before_after(data_before= data_org, data_after= df[col_name])
+            self.plot_before_after(data_before=data_org, data_after=df[col_name])
 
         return df
 
@@ -187,26 +187,25 @@ class DataCleaning(DataLoad):
 
         df[col_name] = np.where(df[col_name] == 0, 0, np.log10(df[col_name]))
 
-
         # 주어진 조건의 윈도우 생성. 이동평균값과 관측값의 차이를 제곱. 이후 표준화처리
-        df['(MA)'] = df[col_name].rolling(interval, min_periods=1, center=True).mean() # 윈도우 생성 (관측값이 중앙으로)
-        df['(MA-MSE)'] = (df[col_name] - df['(MA)']) # 이동평균과 관측값의 차이를 제곱
+        df['(MA)'] = df[col_name].rolling(interval, min_periods=1, center=True).mean()  # 윈도우 생성 (관측값이 중앙으로)
+        df['(MA-MSE)'] = (df[col_name] - df['(MA)'])  # 이동평균과 관측값의 차이를 제곱
         # df['(MA-MSE)'] = (df[col_name] - df['(MA)']).pow(2) # 이동평균과 관측값의 차이를 제곱
-        df['(MA-MSE)'] = (df['(MA-MSE)'] - df['(MA-MSE)'].mean())/df['(MA-MSE)'].std() #  차이값의 제곱을 표준화
+        df['(MA-MSE)'] = (df['(MA-MSE)'] - df['(MA-MSE)'].mean()) / df['(MA-MSE)'].std()  # 차이값의 제곱을 표준화
 
         # 주어진 시그마 이상의 값은 NaN으로 처리. 이후 ffill 처리
-        df.loc[df['(MA-MSE)'].abs() >= sigma, [col_name, newCol_name]] = [np.nan, 1] # 주어진 시그마 이상의 표준화된 값은 NaN처리
-        df[col_name] = self.fill_withFfill(df, col_name) # NaN을 ffill 처리
+        df.loc[df['(MA-MSE)'].abs() >= sigma, [col_name, newCol_name]] = [np.nan, 1]  # 주어진 시그마 이상의 표준화된 값은 NaN처리
+        df[col_name] = self.fill_withFfill(df, col_name)  # NaN을 ffill 처리
 
-        df[col_name] = 10**df[col_name]
+        df[col_name] = 10 ** df[col_name]
         print(df[col_name])
         # 임시로 생성한 칼럼들 드랍
-        df.drop(columns = ['(MA)', '(MA-MSE)'], inplace=True)
+        df.drop(columns=['(MA)', '(MA-MSE)'], inplace=True)
 
         # 처리 전/후 시각화
         if show is True:
             fig_title = f"Moving Average[{col_name}] (interval {interval}, sigma {sigma}) Before/After"
-            self.plot_before_after(data_before= data_org, data_after= df[col_name])
+            self.plot_before_after(data_before=data_org, data_after=df[col_name])
 
         return df
 
@@ -217,35 +216,36 @@ class DataCleaning(DataLoad):
         df[newCol_name] = 0
 
         # 주어진 조건의 윈도우 생성. 이동중앙값과 관측값의 차이를 제곱. 이후 표준화처리
-        df['(MM)'] = df[col_name].rolling(interval, min_periods=1, center=True).median() # 윈도우 생성 (관측값이 중앙으로)
-        df['(MM-MSE)'] = (df[col_name] - df['(MM)']).pow(2) # 이동중앙값과 관측값의 차이를 제곱
-        df['(MM-MSE)'] = (df['(MM-MSE)'] - df['(MM-MSE)'].mean())/df['(MM-MSE)'].std() # 차이값의 제곱을 표준화
+        df['(MM)'] = df[col_name].rolling(interval, min_periods=1, center=True).median()  # 윈도우 생성 (관측값이 중앙으로)
+        df['(MM-MSE)'] = (df[col_name] - df['(MM)']).pow(2)  # 이동중앙값과 관측값의 차이를 제곱
+        df['(MM-MSE)'] = (df['(MM-MSE)'] - df['(MM-MSE)'].mean()) / df['(MM-MSE)'].std()  # 차이값의 제곱을 표준화
 
-        df.loc[df['(MM-MSE)'].abs() >= sigma, [col_name, newCol_name]] = [np.nan, 1] # 주어진 시그마 이상의 표준화된 값은 NaN처리
-        df[col_name] = self.fill_withFfill(df, col_name) # NaN을 ffill 처리
+        df.loc[df['(MM-MSE)'].abs() >= sigma, [col_name, newCol_name]] = [np.nan, 1]  # 주어진 시그마 이상의 표준화된 값은 NaN처리
+        df[col_name] = self.fill_withFfill(df, col_name)  # NaN을 ffill 처리
 
         # 임시로 생성한 칼럼들 드랍
-        df.drop(columns = ['(MM)', '(MM-MSE)'], inplace=True)
+        df.drop(columns=['(MM)', '(MM-MSE)'], inplace=True)
 
         # 처리 전/후 시각화
         if show is True:
             fig_title = f"Moving Median[{col_name}] (interval {interval}, sigma {sigma}) Before/After"
-            self.plot_before_after(data_before= data_org, data_after= df[col_name], figure_name= fig_title)
+            self.plot_before_after(data_before=data_org, data_after=df[col_name], figure_name=fig_title)
 
         return df
-
 
     def DATAFRAME_OUTLIERREMOVED(self, show=False):
         data_before = self.df_org['MELT_WEIGHT'].copy()
         df = self.df_org.copy()
-        df = self.correct_outliers_withThymeBoost(df= df, col_name='MELT_WEIGHT', newCol_name= 'OUTLIER_WGT(TB)', show= False)
+        df = self.correct_outliers_withThymeBoost(df=df, col_name='MELT_WEIGHT', newCol_name='OUTLIER_WGT(TB)',
+                                                  show=False)
 
         for interval in [60, 30, 15, 9, 3]:
-            df = self.correct_outliers_withMovingMedian(df = df, col_name= 'MELT_WEIGHT', newCol_name = f'OUTLIER_WTG(MM_{interval})', interval=interval, sigma=5, show=False)
+            df = self.correct_outliers_withMovingMedian(df=df, col_name='MELT_WEIGHT',
+                                                        newCol_name=f'OUTLIER_WTG(MM_{interval})', interval=interval,
+                                                        sigma=5, show=False)
 
         # 처리 전/후 시각화
         if show is True:
-            self.plot_before_after(data_before, df['MELT_WEIGHT'], figure_name= "Data Cleaning Before/After")
+            self.plot_before_after(data_before, df['MELT_WEIGHT'], figure_name="Data Cleaning Before/After")
 
         return df
-
