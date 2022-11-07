@@ -13,9 +13,6 @@ dc = DataCleaning() # 데이터 정제하는 클래스
 dt = DataTransformation() # 데이터 변환하는 클래스
 nf = NewFeatures()
 
-updated = f"10.27.22"
-ver_msg = f"[전처리데이터] LAST UPDATED ON {updated}"
-
 class DataPreprocess():
     def __init__(self):
         # 원본으로 불러온 데이터
@@ -26,10 +23,10 @@ class DataPreprocess():
         self.df_org = dl.df_org
 
         # 최종결과물: 전처리 된 데이터 프레임 (_prcd == processed == 처리된)
-        self.df_prcd = self.processed_dataframe()
+        self.df_prcd = self.DATAFRAME_PREPROCESSED()
 
 
-    def processed_dataframe(self):
+    def DATAFRAME_PREPROCESSED(self):
         df_prcd = dc.df_clnd.copy()
 
 
@@ -58,6 +55,12 @@ class DataPreprocess():
 
         # 날짜/시간 칼럼을 가지고 월/주/일/시간 등의 칼럼 추가
         df_prcd = nf.expand_date_columns(df_prcd)
+
+        # Lag Features
+        df_prcd, ls_lagCols = nf.generate_columns_withLagFeatures(df= df_prcd, col_feats= self.ls_vars, back_to= 5)
+        # print(f"ls_lagCols = {ls_lagCols}")
+        df_prcd, ls_wndwCols = nf.generate_columns_withWindowFeatures(df= df_prcd, col_feats=self.ls_vars, window_size= 3)
+        # print(f"ls_wndwCols = {ls_wndwCols}")
 
         return df_prcd
 
