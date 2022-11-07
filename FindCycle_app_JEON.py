@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.stats import norm
 
 import seaborn as sns
 from DataPreprocess import DataPreprocess
@@ -39,21 +40,42 @@ def find_cycle(_df):
 
                 # 해결해야 하는 부분 : 한 주기 안에서 최솟값이 중복되는 경우?
 
-
-
-
     # print(MW['CYCLE'].value_counts())
     # plt.plot(MW['DATE_TIME'], MW['MELT_WEIGHT'])
-    plt.plot(MW['DATE_TIME'].index, MW['MELT_WEIGHT'])
-    # plt.plot(MW['DATE_TIME'], cy['MELT_WEIGHT'], 'ro')
-    plt.scatter(MW[MW['CYCLE'] == True]['DATE_TIME'].index,
-                # MW[MW['CYCLE'] == True]['DATE_TIME'].tolist(),
-                MW[MW['CYCLE'] == True]['MELT_WEIGHT'].tolist(),
-                marker='o', color='red')
-    plt.axhline(y=200, color='green', linewidth=1)
-    plt.axhline(y=100, color='orange', linewidth=1)
-    plt.axhline(y=30, color='purple', linewidth=1)
-    plt.show()
+    # plt.plot(MW['DATE_TIME'].index, MW['MELT_WEIGHT'])
+    # # plt.plot(MW['DATE_TIME'], cy['MELT_WEIGHT'], 'ro')
+    # plt.scatter(MW[MW['CYCLE'] == True]['DATE_TIME'].index,
+    #             # MW[MW['CYCLE'] == True]['DATE_TIME'].tolist(),
+    #             MW[MW['CYCLE'] == True]['MELT_WEIGHT'].tolist(),
+    #             marker='o', color='red')
+    # plt.axhline(y=200, color='green', linewidth=1)
+    # plt.axhline(y=100, color='orange', linewidth=1)
+    # plt.axhline(y=30, color='purple', linewidth=1)
+    # plt.show()
+
+    _df["CYCLE"] = MW["CYCLE"]
+
+    return _df
+
+
+def coundCycle(_df):
+    """
+    :param _df:
+    :return: 주기가 들어간 list
+    """
+    cycleIdxs = []
+
+    for i in range(len(_df)):
+        if _df.loc[i, "CYCLE"] == True:
+            cycleIdxs.append(i)
+
+    cycleList = []
+    for i in range(1, len(cycleIdxs)):
+        cycle = cycleIdxs[i] - cycleIdxs[i-1]
+        cycleList.append(cycle)
+
+    return cycleList
+
 
 
 if __name__ == '__main__':
@@ -63,5 +85,13 @@ if __name__ == '__main__':
     df = dp.df_prcd
 
     # test_f()
-    find_cycle(df)
+    df = find_cycle(df)
     # pandas_test()
+
+    cycleList = coundCycle(df) #
+
+    # print(cycleList)
+    plt.style.use("ggplot")
+    plt.title("cycle histogram")
+    plt.hist(cycleList, bins=200)
+    plt.show()

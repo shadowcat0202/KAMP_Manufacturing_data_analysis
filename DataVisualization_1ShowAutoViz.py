@@ -4,15 +4,22 @@ from DataPreprocess import DataPreprocess
 class ShowAutoviz(DataPreprocess):
     def __init__(self):
         super().__init__()
-        df_prcd = self.df_prcd
+
+
+    def RUN_AUTOVIZ(self):
+        # df_prcd = self.df_prcd
+        df = self.df_prcd
+        df.drop(columns = ['DATE_TIME', 'DATE'], inplace=True)\
+        # df['OUTLIERS_MM'] =
+        print(df.columns, df.dtypes, df)
         print("Loading AutoViz")
-        print(df_prcd)
         av = AutoViz_Class()
         av.AutoViz(filename= '',
-                   dfte = df_prcd,
+                   dfte = df,
                    depVar = 'OK',
                    verbose = 2,
-                   max_rows_analyzed= df_prcd.shape[0],
-                   max_cols_analyzed= df_prcd.shape[1])
+                   max_rows_analyzed= df.shape[0],
+                   max_cols_analyzed= df.shape[1])
 
-ShowAutoviz()
+# ShowAutoviz().RUN_AUTOVIZ()
+
