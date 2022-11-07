@@ -218,6 +218,12 @@ def find_cycle_feat_bychoi(_df):
             min_val_idx = mw.loc[t1:t2, 'MELT_WEIGHT'].idxmin()
             mw.loc[min_val_idx, 'CYCLE'] = True
 
+
+def into_NG_area(_df):
+    have_NG_df = _df[_df['OK'] == 0]
+
+
+
 if __name__ == '__main__':
     # 데이터프레임 전처리용 클래스
     dp = DataPreprocess()
