@@ -94,8 +94,8 @@ class GlanceViz(DataPreprocess):
         plt.show()
 
 
-gv = GlanceViz()
-df = DataPreprocess().df_prcd
+# gv = GlanceViz()
+# df = DataPreprocess().df_prcd
 # gv.BOXPLOT_DFPRCD_VARS_BYTIME()
 # gv.PLOT_DFPRCD_OKPROB_BYTIME()
 # gv.PLOT_DFPRCD_WEIGHT_BYTIME()
@@ -106,7 +106,4 @@ df = DataPreprocess().df_prcd
 
 # 불량구간 확인
 # gv.plot_dfprcd_byTime(month= 3, day= 30, hour_from=12 , hour_to= 14)
-# gv.BOXPLOT_DFPRCD_VARS_BYTIME()
-gv.plot_dfprcd_byTime(month= 3, day= 5, hour_from=0 , hour_to= 23, feature_name="MOTORSPEED")
-
 # gv.plot_dfprcd_distribution(df, 'MELT_WEIGHT')

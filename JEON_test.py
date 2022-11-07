@@ -178,10 +178,14 @@ def find_cycle(_df):
     MW['CYCLE'] = False
     t1 = None
     t2 = None
-    for idx in range(1, len(MW)):
-        if not MELT_WEIGHT_under_200[idx - 1] and MELT_WEIGHT_under_200[idx]:  # 구간의 시작
+    for idx in range(2, len(MW)):
+        if not MELT_WEIGHT_under_200[idx-1] and MELT_WEIGHT_under_200[idx] and not MELT_WEIGHT_under_200[idx+1]:
+            MELT_WEIGHT_under_200[idx] = False
+        if not MELT_WEIGHT_under_200[idx-2] and not MELT_WEIGHT_under_200[idx-1] and \
+                MELT_WEIGHT_under_200[idx] and MELT_WEIGHT_under_200[idx+1]:  # 구간의 시작
             t1 = idx
-        elif MELT_WEIGHT_under_200[idx - 1] and not MELT_WEIGHT_under_200[idx]:
+        elif MELT_WEIGHT_under_200[idx-2] and MELT_WEIGHT_under_200[idx-1] and \
+                not MELT_WEIGHT_under_200[idx] and not MELT_WEIGHT_under_200[idx+1]:
             t2 = idx - 1
             # print(f'{t1}~{t2}')
             # 구간 찾음
@@ -196,8 +200,23 @@ def find_cycle(_df):
                 marker='o', color='red')
     plt.show()
 
+def find_cycle_feat_bychoi(_df):
+    mw = _df[['DATE_TIME', 'MELT_WEIGHT']]
+    MELT_WEIGHT_under_200 = mw['MELT_WEIGHT'] < 200
 
-
+    cycle_info = []
+    mw['CYCLE'] = False
+    t1 = None
+    t2 = None
+    for idx in range(1, len(mw)):
+        if not MELT_WEIGHT_under_200[idx - 1] and MELT_WEIGHT_under_200[idx]:  # 구간의 시작
+            t1 = idx
+        elif MELT_WEIGHT_under_200[idx - 1] and not MELT_WEIGHT_under_200[idx]:
+            t2 = idx - 1
+            # print(f'{t1}~{t2}')
+            # 구간 찾음
+            min_val_idx = mw.loc[t1:t2, 'MELT_WEIGHT'].idxmin()
+            mw.loc[min_val_idx, 'CYCLE'] = True
 
 if __name__ == '__main__':
     # 데이터프레임 전처리용 클래스

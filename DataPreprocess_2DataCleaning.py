@@ -1,7 +1,6 @@
 import numpy as np
 from DataPreProcess_1DataLoad import DataLoad
 
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from ThymeBoost import ThymeBoost as tb
 
 import pandas as pd
@@ -22,7 +21,7 @@ import Errors
 class DataCleaning(DataLoad):
     def __init__(self):
         super().__init__()
-        self.df_clnd = self.DATAFRAME_OUTLIERREMOVED()
+        self.df_clnd = self.DATAFRAME_OUTLIERREMOVED(show=False)
 
     def narrow_dataframe(self, df, cols):
         """
@@ -61,6 +60,7 @@ class DataCleaning(DataLoad):
 
         # NaN은 ffill 처리
         df[col_name].fillna(method='ffill', inplace=True)
+        # print(df.at[0, col_name])
 
         # 예외처리. 데이터 프레임의 첫번째 데이터가 NaN이 되었을 경우, 원본 데이터 불러오기
         if np.isnan(df.at[0, col_name]):
@@ -185,7 +185,7 @@ class DataCleaning(DataLoad):
         # OUTLIER 0, 1로 표기할 신규 칼럼 생성. 기본값 0
         df[newCol_name] = 0
 
-        df[col_name] = np.where(df[col_name] == 0, 0, np.log2(df[col_name]))
+        df[col_name] = np.where(df[col_name] == 0, 0, np.log10(df[col_name]))
 
 
         # 주어진 조건의 윈도우 생성. 이동평균값과 관측값의 차이를 제곱. 이후 표준화처리
@@ -198,7 +198,7 @@ class DataCleaning(DataLoad):
         df.loc[df['(MA-MSE)'].abs() >= sigma, [col_name, newCol_name]] = [np.nan, 1] # 주어진 시그마 이상의 표준화된 값은 NaN처리
         df[col_name] = self.fill_withFfill(df, col_name) # NaN을 ffill 처리
 
-        df[col_name] = 2**df[col_name]
+        df[col_name] = 10**df[col_name]
         print(df[col_name])
         # 임시로 생성한 칼럼들 드랍
         df.drop(columns = ['(MA)', '(MA-MSE)'], inplace=True)
@@ -237,23 +237,15 @@ class DataCleaning(DataLoad):
 
     def DATAFRAME_OUTLIERREMOVED(self, show=False):
         data_before = self.df_org['MELT_WEIGHT'].copy()
-        df = self.df_org
+        df = self.df_org.copy()
         df = self.correct_outliers_withThymeBoost(df= df, col_name='MELT_WEIGHT', newCol_name= 'OUTLIER_WGT(TB)', show= False)
-        # df = self.correct_outliers_withSpikeRemoval(df= df, col_name='MELT_WEIGHT', newCol_name='OUTLIER_WTG(SPK)', sigma= 6, show=False)
-        # df = self.correct_outliers_withMovingAverageLog(df = df, col_name= 'MELT_WEIGHT', newCol_name = f'OUTLIER_WTG(MM_{3})', interval=30, sigma=5, show=False)
-
 
         for interval in [60, 30, 15, 9, 3]:
             df = self.correct_outliers_withMovingMedian(df = df, col_name= 'MELT_WEIGHT', newCol_name = f'OUTLIER_WTG(MM_{interval})', interval=interval, sigma=5, show=False)
 
-        # df = self.correct_outliers_withMovingAverage(df = df, col_name= 'MELT_WEIGHT', newCol_name = 'OUTLIER_WTG(MA)', interval=3, sigma=3, show=False)
-        # print(F"이곳은 클리닝. {df.columns.tolist()}")
         # 처리 전/후 시각화
         if show is True:
             self.plot_before_after(data_before, df['MELT_WEIGHT'], figure_name= "Data Cleaning Before/After")
 
         return df
 
-# dc = DataCleaning()
-# df = dc.DATAFRAME_OUTLIERREMOVED(show=True)
-# print(df)
