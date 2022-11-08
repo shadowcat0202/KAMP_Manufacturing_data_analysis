@@ -241,7 +241,7 @@ class DataCleaning(DataLoad):
 
         for interval in [60, 30, 15, 9, 3]:
             df = self.correct_outliers_withMovingMedian(df=df, col_name='MELT_WEIGHT',
-                                                        newCol_name=f'OUTLIER_WTG(MM_{interval})', interval=interval,
+                                                        newCol_name=f'OUTLIER_WGT(MM_{interval})', interval=interval,
                                                         sigma=5, show=False)
 
         # 처리 전/후 시각화
