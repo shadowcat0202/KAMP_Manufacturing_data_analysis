@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 from scipy.stats import norm
 
 import seaborn as sns
-from DataPreprocess import DataPreprocess
 
-pd.set_option("display.max_rows", None)
+
+# pd.set_option("display.max_rows", None)
 
 def find_cycle(_df):
     print(_df.info())
@@ -78,20 +78,21 @@ def coundCycle(_df):
 
 
 
-if __name__ == '__main__':
-    # 데이터프레임 전처리용 클래스
-    dp = DataPreprocess()
-    # 전처리된 데이터프레임
-    df = dp.df_prcd
-
-    # test_f()
-    df = find_cycle(df)
-    # pandas_test()
-
-    cycleList = coundCycle(df) #
-
-    # print(cycleList)
-    plt.style.use("ggplot")
-    plt.title("cycle histogram")
-    plt.hist(cycleList, bins=200)
-    plt.show()
+# if __name__ == '__main__':
+#     from DataPreprocess import DataPreprocess
+#     # 데이터프레임 전처리용 클래스
+#     dp = DataPreprocess()
+#     # 전처리된 데이터프레임
+#     df = dp.df_prcd
+#
+#     # test_f()
+#     df = find_cycle(df)
+#     # pandas_test()
+#
+#     cycleList = coundCycle(df) #
+#
+#     # print(cycleList)
+#     plt.style.use("ggplot")
+#     plt.title("cycle histogram")
+#     plt.hist(cycleList, bins=200)
+#     plt.show()

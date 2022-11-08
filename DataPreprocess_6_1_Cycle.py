@@ -11,7 +11,7 @@ import seaborn as sns
 from DataPreprocess import DataPreprocess
 
 # pandas option
-pd.set_option("display.max_columns", None)
+# pd.set_option("display.max_columns", None)
 # pd.set_option("display.max_rows", None)
 
 # 데이터프레임 전처리용 클래스
