@@ -68,46 +68,25 @@ def test_f():
 
     # 전처리된 데이터프레임
     df = dp.df_prcd
+    # print(df.columns.tolist())
+    # exit()
     df.dropna(axis=0, inplace=True)
-    df.drop(columns=['DATE_TIME', 'DATE'], inplace=True)
     print('df_prcd columns')
-    df.info()
-    # set_columns = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'CHG_MELT_WEIGHT', 'OK']
-    # set_columns = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'OK']
-    # set_columns = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'OUTLIER_WGT(TB)', 'OUTLIER_WTG(MM_60)', 'OUTLIER_WTG(MM_30)', 'OUTLIER_WTG(MM_15)', 'OUTLIER_WTG(MM_9)', 'OUTLIER_WTG(MM_3)', 'WEEK', 'WEEKDAY', 'HOUR', 'MELT_TEMP(t-1)', 'MELT_TEMP(t-2)', 'MELT_TEMP(t-3)', 'MELT_TEMP(t-4)', 'MELT_TEMP(t-5)', 'MELT_TEMP(t-6)', 'MELT_TEMP(t-7)', 'MELT_TEMP(t-8)', 'MELT_TEMP(t-9)', 'MELT_TEMP(t-10)', 'MOTORSPEED(t-1)', 'MOTORSPEED(t-2)', 'MOTORSPEED(t-3)', 'MOTORSPEED(t-4)', 'MOTORSPEED(t-5)', 'MOTORSPEED(t-6)', 'MOTORSPEED(t-7)', 'MOTORSPEED(t-8)', 'MOTORSPEED(t-9)', 'MOTORSPEED(t-10)', 'MELT_WEIGHT(t-1)', 'MELT_WEIGHT(t-2)', 'MELT_WEIGHT(t-3)', 'MELT_WEIGHT(t-4)', 'MELT_WEIGHT(t-5)', 'MELT_WEIGHT(t-6)', 'MELT_WEIGHT(t-7)', 'MELT_WEIGHT(t-8)', 'MELT_WEIGHT(t-9)', 'MELT_WEIGHT(t-10)', 'INSP(t-1)', 'INSP(t-2)', 'INSP(t-3)', 'INSP(t-4)', 'INSP(t-5)', 'INSP(t-6)', 'INSP(t-7)', 'INSP(t-8)', 'INSP(t-9)', 'INSP(t-10)', 'MELT_TEMP_std(100)', 'MELT_TEMP_mean(100)', 'MELT_TEMP_max(100)', 'MELT_TEMP_min(100)', 'MELT_TEMP_median(100)', 'MOTORSPEED_std(100)', 'MOTORSPEED_mean(100)', 'MOTORSPEED_max(100)', 'MOTORSPEED_min(100)', 'MOTORSPEED_median(100)', 'MELT_WEIGHT_std(100)', 'MELT_WEIGHT_mean(100)', 'MELT_WEIGHT_max(100)', 'MELT_WEIGHT_min(100)', 'MELT_WEIGHT_median(100)', 'INSP_std(100)', 'INSP_mean(100)', 'INSP_max(100)', 'INSP_min(100)', 'INSP_median(100)', 'OK']
-    set_columns = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'OUTLIER_WGT(TB)',
-       'WEEKDAY', 'HOUR',
-       'MELT_TEMP(t-1)', 'MELT_TEMP(t-2)', 'MELT_TEMP(t-3)', 'MELT_TEMP(t-4)',
-       'MELT_TEMP(t-5)', 'MELT_TEMP(t-6)', 'MELT_TEMP(t-7)', 'MELT_TEMP(t-8)',
-       'MELT_TEMP(t-9)', 'MELT_TEMP(t-10)', 'MOTORSPEED(t-1)',
-       'MOTORSPEED(t-2)', 'MOTORSPEED(t-3)', 'MOTORSPEED(t-4)',
-       'MOTORSPEED(t-5)', 'MOTORSPEED(t-6)', 'MOTORSPEED(t-7)',
-       'MOTORSPEED(t-8)', 'MOTORSPEED(t-9)', 'MOTORSPEED(t-10)',
-       'MELT_WEIGHT(t-1)', 'MELT_WEIGHT(t-2)', 'MELT_WEIGHT(t-3)',
-       'MELT_WEIGHT(t-4)', 'MELT_WEIGHT(t-5)', 'MELT_WEIGHT(t-6)',
-       'MELT_WEIGHT(t-7)', 'MELT_WEIGHT(t-8)', 'MELT_WEIGHT(t-9)',
-       'MELT_WEIGHT(t-10)', 'INSP(t-1)', 'INSP(t-2)', 'INSP(t-3)', 'INSP(t-4)',
-       'INSP(t-5)', 'INSP(t-6)', 'INSP(t-7)', 'INSP(t-8)', 'INSP(t-9)',
-       'INSP(t-10)', 'OK(t-1)', 'OK(t-2)', 'OK(t-3)', 'OK(t-4)', 'OK(t-5)',
-       'OK(t-6)', 'OK(t-7)', 'OK(t-8)', 'OK(t-9)', 'OK(t-10)',
-       'MELT_TEMP_STD(10)', 'MELT_TEMP_MEAN(10)', 'MELT_TEMP_MAX(10)',
-       'MELT_TEMP_MIN(10)', 'MELT_TEMP_MEDIAN(10)', 'MELT_TEMP_SUM(10)',
-       'MOTORSPEED_STD(10)', 'MOTORSPEED_MEAN(10)', 'MOTORSPEED_MAX(10)',
-       'MOTORSPEED_MIN(10)', 'MOTORSPEED_MEDIAN(10)', 'MOTORSPEED_SUM(10)',
-       'MELT_WEIGHT_STD(10)', 'MELT_WEIGHT_MEAN(10)', 'MELT_WEIGHT_MAX(10)',
-       'MELT_WEIGHT_MIN(10)', 'MELT_WEIGHT_MEDIAN(10)', 'MELT_WEIGHT_SUM(10)',
-       'INSP_STD(10)', 'INSP_MEAN(10)', 'INSP_MAX(10)', 'INSP_MIN(10)',
-       'INSP_MEDIAN(10)', 'INSP_SUM(10)', 'OK_STD(10)', 'OK_MEAN(10)',
-       'OK_MEDIAN(10)', 'OK_SUM(10)',
-       'CYCLE_ROWNUM', 'OUTLIER_WTG(MM)', 'OK']
+    # df.info()
+    # outlier용 새로운 컬럼
+    set_columns = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'OUTLIER_WGT(TB)', 'WEEKDAY', 'HOUR', 'MELT_TEMP(t-1)', 'MELT_TEMP(t-2)', 'MELT_TEMP(t-3)', 'MELT_TEMP(t-4)', 'MELT_TEMP(t-5)', 'MELT_TEMP(t-6)', 'MELT_TEMP(t-7)', 'MELT_TEMP(t-8)', 'MELT_TEMP(t-9)', 'MELT_TEMP(t-10)', 'MOTORSPEED(t-1)', 'MOTORSPEED(t-2)', 'MOTORSPEED(t-3)', 'MOTORSPEED(t-4)', 'MOTORSPEED(t-5)', 'MOTORSPEED(t-6)', 'MOTORSPEED(t-7)', 'MOTORSPEED(t-8)', 'MOTORSPEED(t-9)', 'MOTORSPEED(t-10)', 'MELT_WEIGHT(t-1)', 'MELT_WEIGHT(t-2)', 'MELT_WEIGHT(t-3)', 'MELT_WEIGHT(t-4)', 'MELT_WEIGHT(t-5)', 'MELT_WEIGHT(t-6)', 'MELT_WEIGHT(t-7)', 'MELT_WEIGHT(t-8)', 'MELT_WEIGHT(t-9)', 'MELT_WEIGHT(t-10)', 'INSP(t-1)', 'INSP(t-2)', 'INSP(t-3)', 'INSP(t-4)', 'INSP(t-5)', 'INSP(t-6)', 'INSP(t-7)', 'INSP(t-8)', 'INSP(t-9)', 'INSP(t-10)', 'OK(t-1)', 'OK(t-2)', 'OK(t-3)', 'OK(t-4)', 'OK(t-5)', 'OK(t-6)', 'OK(t-7)', 'OK(t-8)', 'OK(t-9)', 'OK(t-10)', 'MELT_TEMP_STD(10)', 'MELT_TEMP_MEAN(10)', 'MELT_TEMP_MAX(10)', 'MELT_TEMP_MIN(10)', 'MELT_TEMP_MEDIAN(10)', 'MELT_TEMP_SUM(10)', 'MOTORSPEED_STD(10)', 'MOTORSPEED_MEAN(10)', 'MOTORSPEED_MAX(10)', 'MOTORSPEED_MIN(10)', 'MOTORSPEED_MEDIAN(10)', 'MOTORSPEED_SUM(10)', 'MELT_WEIGHT_STD(10)', 'MELT_WEIGHT_MEAN(10)', 'MELT_WEIGHT_MAX(10)', 'MELT_WEIGHT_MIN(10)', 'MELT_WEIGHT_MEDIAN(10)', 'MELT_WEIGHT_SUM(10)', 'INSP_STD(10)', 'INSP_MEAN(10)', 'INSP_MAX(10)', 'INSP_MIN(10)', 'INSP_MEDIAN(10)', 'INSP_SUM(10)', 'OK_STD(10)', 'OK_MEAN(10)', 'OK_MEDIAN(10)', 'OK_SUM(10)', 'CYCLE_ROWNUM', 'OUTLIER_WGT(MM)', 'OK']
+
+    # print(df['OUTLIER_WGT'].value_counts())
+
     dataset = df[set_columns]
+
 
 
     # dataset = df[set_columns]
     dataset = dataset.fillna(method='bfill')
     dataset.info()
 
-    split_num = int(dataset.shape[0] * 0.5)
+    split_num = int(dataset.shape[0] * 0.6)
     train = dataset[:split_num]
     test = dataset[split_num:]
 
@@ -149,7 +128,7 @@ def test_f():
     model_path = './model/'
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     early_stop = EarlyStopping(monitor='val_loss', patience=5)
-    filename = os.path.join(model_path, 'model_weight.h5')
+    filename = os.path.join(model_path, 'model_double_check.h5')
     checkpoint = ModelCheckpoint(filename, monitor='val_loss', verbose=0, save_best_only=True, mode='auto')
 
     history = model.fit(x_train, y_train,
@@ -171,13 +150,16 @@ def test_f():
 
     print(pred_df[set_columns[-1]].value_counts())
 
+    # 혼동 행렬 ------------------------------------------------------
     classify = confusion_matrix(test_label, pred_df)
     print(classify)
 
-    p = precision_score(test_label, pred_df)
-    r = recall_score(test_label, pred_df)
-    f1 = f1_score(test_label, pred_df)
-    acc = accuracy_score(test_label, pred_df)
+    # 모델 평가 지표 -----------------------------------------------
+    p = precision_score(test_label, pred_df)    # TP/(TP+FP)
+    r = recall_score(test_label, pred_df)   # TP/(TP+FN)
+    f1 = f1_score(test_label, pred_df)  # 2*{(정밀도*재현율)/(정밀도+재현율)}
+    acc = accuracy_score(test_label, pred_df)   # (TP+TN)/(TP+FP+FN+TN)
+
     print(f"precision: %0.4f" % p)
     print(f"recall: %0.4f" % r)
     print(f"f1-score: %0.4f" % f1)

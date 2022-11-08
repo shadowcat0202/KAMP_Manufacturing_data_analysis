@@ -156,7 +156,9 @@ class GlanceViz(DataPreprocess):
 gv = GlanceViz()
 
 # 특징별 분포 BOX PLOT
+gv.boxplot_feature_byTimeFormats(colName_feat='MELT_WEIGHT', load_dfORG=True)
 # gv.boxplot_feature_byTimeFormats(colName_feat='MELT_WEIGHT', load_dfORG=False)
+
 
 # 시간포맷에 따른 OK 확률 시각화
 # gv.PLOT_DFPRCD_OKPROB_BYTIMEFORMATS()
@@ -166,5 +168,4 @@ gv = GlanceViz()
 # gv.plot_NG_byTwoFeatures(colName_feat1='MELT_WEIGHT', colName_feat2='MELT_TEMP',period='ALL', drawLine_at=(None, None), y_min=(None, None), load_dfORG=False)
 
 # 특정 날짜 NG 조회
-gv.plot_NG_byTwoFeatures(colName_feat1='MELT_TEMP', colName_feat2='MELT_WEIGHT',period='3/22-3/23', drawLine_at=('ax1', 50), y_min=(None, None), load_dfORG=False)
-
+# gv.plot_NG_byTwoFeatures(colName_feat1='MELT_TEMP', colName_feat2='MELT_WEIGHT',period='3/22-3/23', drawLine_at=('ax1', 50), y_min=(None, None), load_dfORG=False)
