@@ -9,6 +9,8 @@ from DataPreprocess_6NewFeatures import NewFeatures
 
 from FindCycle_app_JEON import find_cycle, coundCycle
 
+import numpy as np
+
 dl = DataLoad() # 데이터셋 불러오는 클래스
 dc = DataCleaning() # 데이터 정제하는 클래스
 dt = DataTransformation() # 데이터 변환하는 클래스
@@ -60,7 +62,6 @@ class DataPreprocess():
         # Lag Features
         ls_vars = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'OK'] # 종속변수의 리스트
         df_prcd, ls_lagCols = nf.generate_columns_withLagFeatures(df= df_prcd, col_feats= ls_vars, back_to= 10)
-
         # Window Features
         df_prcd, ls_wndwCols = nf.generate_columns_withWindowFeatures(df= df_prcd, col_feats=ls_vars, window_size= 10)
 
@@ -68,12 +69,14 @@ class DataPreprocess():
         df_prcd = find_cycle(df_prcd)
 
         # Option1 TB/ MM 아웃라이어를 하나의 아웃라이어로 통합 with sum
-        ls_mmCols = [ 'OUTLIER_WGT(TB)', 'OUTLIER_WGT(MM_60)', 'OUTLIER_WGT(MM_30)', 'OUTLIER_WGT(MM_15)', 'OUTLIER_WGT(MM_9)', 'OUTLIER_WGT(MM_3)']
-        df_prcd['OUTLIER_WGT'] = df_prcd[ls_mmCols].sum(axis=1)
+        # ls_mmCols = [ 'OUTLIER_WGT(TB)', 'OUTLIER_WGT(MM_60)', 'OUTLIER_WGT(MM_30)', 'OUTLIER_WGT(MM_15)', 'OUTLIER_WGT(MM_9)', 'OUTLIER_WGT(MM_3)']
+        # df_prcd['OUTLIER_WGT'] = df_prcd[ls_mmCols].sum(axis=1)
+        # df_prcd['OUTLIER_WGT'] = np.where(df_prcd['OUTLIER_WGT']==0, 0, 1)
+
 
         # Option2: MM 아웃라이어만 하나로 통합 with sum
-        # ls_mmCols = ['OUTLIER_WGT(MM_60)', 'OUTLIER_WGT(MM_30)', 'OUTLIER_WGT(MM_15)', 'OUTLIER_WGT(MM_9)', 'OUTLIER_WGT(MM_3)']
-        # df_prcd['OUTLIER_WGT(MM)'] = df_prcd[ls_mmCols].sum(axis=1)
+        ls_mmCols = ['OUTLIER_WGT(MM_60)', 'OUTLIER_WGT(MM_30)', 'OUTLIER_WGT(MM_15)', 'OUTLIER_WGT(MM_9)', 'OUTLIER_WGT(MM_3)']
+        df_prcd['OUTLIER_WGT(MM)'] = df_prcd[ls_mmCols].sum(axis=1)
 
         # 불필요한 칼럼 제거
         df_prcd.drop(columns = ls_mmCols, inplace=True) #통합 이전 각 OUTLIER 칼럼들

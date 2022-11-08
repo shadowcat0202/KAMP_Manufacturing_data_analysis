@@ -142,7 +142,6 @@ class GlanceViz(DataPreprocess):
         f.suptitle(f'{colName_feat} by date type data')
         plt.show()
 
-
     def plot_dfprcd_distribution(self, df, colName):
         """
         분포 그래프
