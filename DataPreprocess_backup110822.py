@@ -67,20 +67,10 @@ class DataPreprocess():
         # Cycle
         df_prcd = find_cycle(df_prcd)
 
-        # Option1 TB/ MM 아웃라이어를 하나의 아웃라이어로 통합 with sum
+        # MM 아웃라이어 하나로 통합
         ls_mmCols = [ 'OUTLIER_WGT(TB)', 'OUTLIER_WGT(MM_60)', 'OUTLIER_WGT(MM_30)', 'OUTLIER_WGT(MM_15)', 'OUTLIER_WGT(MM_9)', 'OUTLIER_WGT(MM_3)']
         df_prcd['OUTLIER_WGT'] = df_prcd[ls_mmCols].sum(axis=1)
-
-        # Option2: MM 아웃라이어만 하나로 통합 with sum
-        # ls_mmCols = ['OUTLIER_WGT(MM_60)', 'OUTLIER_WGT(MM_30)', 'OUTLIER_WGT(MM_15)', 'OUTLIER_WGT(MM_9)', 'OUTLIER_WGT(MM_3)']
-        # df_prcd['OUTLIER_WGT(MM)'] = df_prcd[ls_mmCols].sum(axis=1)
-
-        # 불필요한 칼럼 제거
-        df_prcd.drop(columns = ls_mmCols, inplace=True) #통합 이전 각 OUTLIER 칼럼들
-        df_prcd.drop(columns = ['MONTH', 'WEEK', 'DATE', 'DATE_TIME'], inplace=True) #통합 이전 각 OUTLIER 칼럼들
-        df_prcd.drop(columns = ['OK_MIN(10)', 'OK_MAX(10)'], inplace=True) # 불필요한 OK 윈도우 결과 칼럼 삭제
-
-
+        df_prcd.drop(columns = ls_mmCols, inplace=True)
 
         return df_prcd
 
