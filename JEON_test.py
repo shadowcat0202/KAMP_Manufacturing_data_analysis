@@ -68,15 +68,21 @@ def test_f():
 
     # 전처리된 데이터프레임
     df = dp.df_prcd
+    df.dropna(axis=0, inplace=True)
+    df.drop(columns=['DATE_TIME', 'DATE'], inplace=True)
     print('df_prcd columns')
     df.info()
     # set_columns = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'CHG_MELT_WEIGHT', 'OK']
-    set_columns = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'OK']
+    # set_columns = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'OK']
+    set_columns = ['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'OUTLIER_WGT(TB)', 'OUTLIER_WTG(MM_60)', 'OUTLIER_WTG(MM_30)', 'OUTLIER_WTG(MM_15)', 'OUTLIER_WTG(MM_9)', 'OUTLIER_WTG(MM_3)', 'WEEK', 'WEEKDAY', 'HOUR', 'MELT_TEMP(t-1)', 'MELT_TEMP(t-2)', 'MELT_TEMP(t-3)', 'MELT_TEMP(t-4)', 'MELT_TEMP(t-5)', 'MELT_TEMP(t-6)', 'MELT_TEMP(t-7)', 'MELT_TEMP(t-8)', 'MELT_TEMP(t-9)', 'MELT_TEMP(t-10)', 'MOTORSPEED(t-1)', 'MOTORSPEED(t-2)', 'MOTORSPEED(t-3)', 'MOTORSPEED(t-4)', 'MOTORSPEED(t-5)', 'MOTORSPEED(t-6)', 'MOTORSPEED(t-7)', 'MOTORSPEED(t-8)', 'MOTORSPEED(t-9)', 'MOTORSPEED(t-10)', 'MELT_WEIGHT(t-1)', 'MELT_WEIGHT(t-2)', 'MELT_WEIGHT(t-3)', 'MELT_WEIGHT(t-4)', 'MELT_WEIGHT(t-5)', 'MELT_WEIGHT(t-6)', 'MELT_WEIGHT(t-7)', 'MELT_WEIGHT(t-8)', 'MELT_WEIGHT(t-9)', 'MELT_WEIGHT(t-10)', 'INSP(t-1)', 'INSP(t-2)', 'INSP(t-3)', 'INSP(t-4)', 'INSP(t-5)', 'INSP(t-6)', 'INSP(t-7)', 'INSP(t-8)', 'INSP(t-9)', 'INSP(t-10)', 'MELT_TEMP_std(100)', 'MELT_TEMP_mean(100)', 'MELT_TEMP_max(100)', 'MELT_TEMP_min(100)', 'MELT_TEMP_median(100)', 'MOTORSPEED_std(100)', 'MOTORSPEED_mean(100)', 'MOTORSPEED_max(100)', 'MOTORSPEED_min(100)', 'MOTORSPEED_median(100)', 'MELT_WEIGHT_std(100)', 'MELT_WEIGHT_mean(100)', 'MELT_WEIGHT_max(100)', 'MELT_WEIGHT_min(100)', 'MELT_WEIGHT_median(100)', 'INSP_std(100)', 'INSP_mean(100)', 'INSP_max(100)', 'INSP_min(100)', 'INSP_median(100)', 'OK']
     dataset = df[set_columns]
+
+
+    # dataset = df[set_columns]
     dataset = dataset.fillna(method='bfill')
     dataset.info()
 
-    split_num = int(dataset.shape[0] * 0.7)
+    split_num = int(dataset.shape[0] * 0.6)
     train = dataset[:split_num]
     test = dataset[split_num:]
 
@@ -123,7 +129,7 @@ def test_f():
 
     history = model.fit(x_train, y_train,
                         epochs=100,
-                        batch_size=500,
+                        batch_size=50,
                         validation_data=(x_valid, y_valid),
                         callbacks=[early_stop, checkpoint])
 
@@ -231,6 +237,6 @@ if __name__ == '__main__':
     df = dp.df_prcd
     df = df.fillna(method='bfill')
 
-    # test_f()
-    find_cycle(df)
+    test_f()
+    # find_cycle(df)
     # pandas_test()

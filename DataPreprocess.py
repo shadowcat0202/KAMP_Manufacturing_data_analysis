@@ -57,11 +57,11 @@ class DataPreprocess():
         df_prcd = nf.expand_date_columns(df_prcd)
 
         # Lag Features
-        df_prcd, ls_lagCols = nf.generate_columns_withLagFeatures(df= df_prcd, col_feats= self.ls_vars, back_to= 5)
+        df_prcd, ls_lagCols = nf.generate_columns_withLagFeatures(df= df_prcd, col_feats= self.ls_vars, back_to= 10)
         # print(f"ls_lagCols = {ls_lagCols}")
 
         # Window Features
-        df_prcd, ls_wndwCols = nf.generate_columns_withWindowFeatures(df= df_prcd, col_feats=self.ls_vars, window_size= 300)
+        df_prcd, ls_wndwCols = nf.generate_columns_withWindowFeatures(df= df_prcd, col_feats=self.ls_vars, window_size=100)
         # print(f"ls_wndwCols = {ls_wndwCols}")
 
         return df_prcd
