@@ -198,7 +198,7 @@ class DataCleaning(DataLoad):
         df[col_name] = self.fill_withFfill(df, col_name)  # NaN을 ffill 처리
 
         df[col_name] = 10 ** df[col_name]
-        print(df[col_name])
+        # print(df[col_name])
         # 임시로 생성한 칼럼들 드랍
         df.drop(columns=['(MA)', '(MA-MSE)'], inplace=True)
 

@@ -42,8 +42,6 @@ class GlanceViz(DataPreprocess):
         # 데이터 프레임 결정: 기본값은 전처리. load_dfORG == True일 경우 원본데이터를 불러옴
         if load_dfORG is False:
             df = self.df_prcd
-            # df['DIFF_300MEDIAN'] = df['MELT_TEMP_median(300)'] - df['MELT_TEMP_median(300)'].shift(1)
-            df['DIFF_300MEDIAN_3MEAN'] = df['MELT_WEIGHT_median(300)'].rolling(30).mean()
         else:
             df = self.df_org
 
@@ -97,7 +95,7 @@ class GlanceViz(DataPreprocess):
         if drawLine_at[0] == 'ax1':
             ax1.plot(df['DATE_TIME'], [drawLine_at[1]]*len(df['DATE_TIME']), color='green', label = f"Your Line({drawLine_at[1]})", linestyle = "--", alpha=1)
 
-        elif drawLine_at[0] == 'ax2':
+        elif drawLine_at[1] == 'ax2':
             ax2.plot(df['DATE_TIME'], [drawLine_at[1]]*len(df['DATE_TIME']), color='green', label = f"Your Line({drawLine_at[1]})", linestyle = "--", alpha=1)
         elif drawLine_at == (None, None):
             pass
@@ -144,28 +142,6 @@ class GlanceViz(DataPreprocess):
         f.suptitle(f'{colName_feat} by date type data')
         plt.show()
 
-    def violinplot_feature_byTimeFormats(self, colName_feat, load_dfORG = False):
-        """
-        주어진 특징의 값을 박스플랏화
-        :param colName_feat: (STR ONLY) 특징의 칼럼이름
-        :param load_dfORG: (BOOL) 전처리된 데이터 (False), 원본 데이터 (True)
-        :return: None
-        """
-        ls_dateCols = ['MONTH', 'WEEK', 'WEEKDAY', 'HOUR']
-
-        if load_dfORG is False:
-            df = self.df_prcd
-        else:
-            df = self.df_org
-
-        f, ax = plt.subplots(1, len(ls_dateCols), figsize=(20,10))
-        for j, col_dt in enumerate(ls_dateCols):
-            sns.violinplot(x=df[col_dt], y=df[colName_feat], ax=ax[j], hue=df['OK'], scale='count', split=True)
-        f.tight_layout()
-        f.suptitle(f'{colName_feat} by date type data')
-        plt.show()
-
-
     def plot_dfprcd_distribution(self, df, colName):
         """
         분포 그래프
@@ -178,26 +154,17 @@ class GlanceViz(DataPreprocess):
 
 
 gv = GlanceViz()
-dp = DataPreprocess()
-df = dp.df_prcd
-print(df.columns)
-# 특징별 분포 BOX PLOT
 
-# gv.violinplot_feature_byTimeFormats(colName_feat='MELT_TEMP_mean(3)', load_dfORG=False)
-# gv.boxplot_feature_byTimeFormats(colName_feat='INSP', load_dfORG=False)
+# 특징별 분포 BOX PLOT
+# gv.boxplot_feature_byTimeFormats(colName_feat='MELT_WEIGHT', load_dfORG=False)
 
 # 시간포맷에 따른 OK 확률 시각화
 # gv.PLOT_DFPRCD_OKPROB_BYTIMEFORMATS()
 
-# gv.plot_dfprcd_distribution(gv.df_prcd, 'MELT_TEMP_median(300)')
 
 # 전체 기간 NG 조회
-# gv.plot_NG_byTwoFeatures(colName_feat1='MELT_TEMP_median(300)', colName_feat2='MELT_TEMP',period='ALL', drawLine_at=(None, None), y_min=(None, None), load_dfORG=False)
 # gv.plot_NG_byTwoFeatures(colName_feat1='MELT_WEIGHT', colName_feat2='MELT_TEMP',period='ALL', drawLine_at=(None, None), y_min=(None, None), load_dfORG=False)
 
 # 특정 날짜 NG 조회
-# 3/22 4/초
-# gv.plot_NG_byTwoFeatures(colName_feat1='DIFF_300MEDOSBD', colName_feat2='MELT_WEIGHT',period='4/3-4/20', drawLine_at=('ax1', 50), y_min=(None, None), load_dfORG=False)
-gv.plot_NG_byTwoFeatures(colName_feat1='DIFF_300MEDIAN_3MEAN', colName_feat2='MELT_WEIGHT',period='4/3-4/20', drawLine_at=('ax1', 210), y_min=(None, None), load_dfORG=False)
-# gv.plot_NG_byTwoFeatures(colName_feat1='TEMP_DIFF', colName_feat2='MELT_WEIGHT',period='4/3-4/20', drawLine_at=('ax1', 50), y_min=(None, None), load_dfORG=False)
-# gv.plot_NG_byTwoFeatures(colName_feat1='MELT_TEMP_median(300)', colName_feat2='MELT_WEIGHT',period='4/3-4/20', drawLine_at=('ax1', 50), y_min=(None, None), load_dfORG=False)
+gv.plot_NG_byTwoFeatures(colName_feat1='MELT_TEMP', colName_feat2='MELT_WEIGHT',period='3/22-3/23', drawLine_at=('ax1', 50), y_min=(None, None), load_dfORG=False)
+

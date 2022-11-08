@@ -148,7 +148,7 @@ class LSTM_remake:
     def model_compile(self):
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
         self.early_stop = EarlyStopping(monitor='val_loss', patience=5)
-        self.filename = os.path.join(self.model_path, 'tmp_checkpoint.h5')
+        self.filename = os.path.join(self.model_path, 'OK_more_outlier_merge.h5')
         self.checkpoint = ModelCheckpoint(self.filename, monitor='val_loss', verbose=0, save_best_only=True, mode='auto')
 
     def model_fit(self, _x_train, _y_train, _x_valid, _y_valid, _show=False):
