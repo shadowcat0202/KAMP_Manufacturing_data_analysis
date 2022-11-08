@@ -7,6 +7,7 @@ from DataPreprocess_2DataCleaning import DataCleaning
 from DataPreprocess_5DataTransformation import DataTransformation
 from DataPreprocess_6NewFeatures import NewFeatures
 
+from FindCycle_app_JEON import find_cycle, coundCycle
 
 dl = DataLoad() # 데이터셋 불러오는 클래스
 dc = DataCleaning() # 데이터 정제하는 클래스
@@ -57,11 +58,16 @@ class DataPreprocess():
         df_prcd = nf.expand_date_columns(df_prcd)
 
         # Lag Features
-        df_prcd, ls_lagCols = nf.generate_columns_withLagFeatures(df= df_prcd, col_feats= self.ls_vars, back_to= 5)
+        df_prcd, ls_lagCols = nf.generate_columns_withLagFeatures(df= df_prcd, col_feats= self.ls_vars, back_to= 10)
         # print(f"ls_lagCols = {ls_lagCols}")
-        df_prcd, ls_wndwCols = nf.generate_columns_withWindowFeatures(df= df_prcd, col_feats=self.ls_vars, window_size= 3)
+
+        # Window Features
+        df_prcd, ls_wndwCols = nf.generate_columns_withWindowFeatures(df= df_prcd, col_feats=self.ls_vars, window_size= 10)
         # print(f"ls_wndwCols = {ls_wndwCols}")
 
-        return df_prcd
+        # Cycle
+        # df_prcd = find_cycle(df_prcd)
+        # df_prcd = coundCycle(df_prcd)
 
+        return df_prcd
 

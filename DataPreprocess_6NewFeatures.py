@@ -47,7 +47,7 @@ class NewFeatures():
 
     def generate_columns_withWindowFeatures(self, df, col_feats, window_size):
 
-        methods = ['std', 'mean', 'max', 'min', 'median']
+        methods = ['STD', 'MEAN', 'MAX', 'MIN', 'MEDIAN', 'SUM']
         log = {}
         ls_cols = []
         for col in col_feats:
@@ -55,77 +55,78 @@ class NewFeatures():
             rolling = df[col].rolling(window_size)
             for mth in methods:
                 newCol_name = f"{col}_{mth}({window_size})"
-                if mth == 'mean':
+                if mth == 'MEAN':
                     df[newCol_name] = rolling.mean()
-                elif mth == 'std':
+                elif mth == 'STD':
                     df[newCol_name] = rolling.std()
-                elif mth == 'median':
+                elif mth == 'MEDIAN':
                     df[newCol_name] = rolling.median()
-                elif mth == 'min':
+                elif mth == 'MIN':
                     df[newCol_name] = rolling.min()
-                elif mth == 'max':
+                elif mth == 'MAX':
                     df[newCol_name] = rolling.max()
+                elif mth == 'SUM':
+                    df[newCol_name] = rolling.sum()
                 ls_cols.append(newCol_name)
                 log[col] = ls_cols
 
         return df, log
-
-    """
-    # df = df.iloc[573739:573826]
-    # df = df[['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'OUTLIER_WGT(TB)',
-    #          'OUTLIER_WTG(MM_60)', 'OUTLIER_WTG(MM_30)', 'OUTLIER_WTG(MM_15)',
-    #          'OUTLIER_WTG(MM_9)', 'OUTLIER_WTG(MM_3)', 'DATE_TIME', 'OK', 'DATE']]
-    # df['NUM'] = df.index.astype(int)
-    # df['NUM'] = df['NUM'] % 10
+#
+# if __name__ == '__main__':
+#     # df = df.iloc[573739:573826]
+#     df = df[['MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP', 'OUTLIER_WGT(TB)',
+#              'OUTLIER_WTG(MM_60)', 'OUTLIER_WTG(MM_30)', 'OUTLIER_WTG(MM_15)',
+#              'OUTLIER_WTG(MM_9)', 'OUTLIER_WTG(MM_3)', 'DATE_TIME', 'OK', 'DATE']]
+#     df['NUM'] = df.index.astype(int)
+#     df['NUM'] = df['NUM'] % 10
+#
+#
+#     # x = df[['NUM', 'MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP']]
+#     x = df[['NUM', 'DATE_TIME', 'MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP']]
+#     y = df['OK']
+#
+#     print(df['NUM'].value_counts())
+#     print(x.value_counts())
+#     print(y.value_counts())
+#
+#     from tsfresh import extract_features
+#     from tsfresh import extract_relevant_features
+#     from tsfresh.utilities.dataframe_functions import impute
+#     from tsfresh import select_features
+#     from multiprocessing import freeze_support
+#     # print(df.dtypes)
+#     freeze_support()
+#     # print(df.index.tolist())
+#     # features = extract_relevant_features(x, y, column_id="NUM", column_sort="DATE_TIME")
+#     features = extract_features(x, column_id="NUM", column_sort="DATE_TIME")
+#     # features = extract_features(x, column_id="DATE_TIME", column_sort="DATE_TIME")
+#     print(f"FEATURES.info = \n{features.info}")
+#     print(f"FEATURES.shape = \n{features.shape}")
+#     print(f"FEATURES.columns = \n{features.columns}")
+#     print(f"FEATURES = \n{features}")
+#     #
+#     impute(features)
+#     filtered_featrues = select_features(features, y)
+#     print(f"FILTERED_FEATURES = \n{filtered_featrues}")
     #
     #
-    # # x = df[['NUM', 'MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP']]
-    # x = df[['NUM', 'DATE_TIME', 'MELT_TEMP', 'MOTORSPEED', 'MELT_WEIGHT', 'INSP']]
-    # y = df['OK']
+    # from tsfresh.examples.robot_execution_failures import download_robot_execution_failures, load_robot_execution_failures
     #
-    # print(df['NUM'].value_counts())
-    # print(x.value_counts())
-    # print(y.value_counts())
+    # download_robot_execution_failures()
+    # x, y = data = tsfresh.examples.load_robot_execution_failures()
+    # print(x,'\n', y)
     #
     # from tsfresh import extract_features
-    # from tsfresh import extract_relevant_features
-    # from tsfresh.utilities.dataframe_functions import impute
-    # from tsfresh import select_features
-    # from multiprocessing import freeze_support
-    # # print(df.dtypes)
-    # freeze_support()
-    # # print(df.index.tolist())
-    # # features = extract_relevant_features(x, y, column_id="NUM", column_sort="DATE_TIME")
-    # features = extract_features(x, column_id="NUM", column_sort="DATE_TIME")
-    # # features = extract_features(x, column_id="DATE_TIME", column_sort="DATE_TIME")
-    # print(f"FEATURES.info = \n{features.info}")
-    # print(f"FEATURES.shape = \n{features.shape}")
-    # print(f"FEATURES.columns = \n{features.columns}")
-    # print(f"FEATURES = \n{features}")
-    # #
-    # impute(features)
-    # filtered_featrues = select_features(features, y)
-    # print(f"FILTERED_FEATURES = \n{filtered_featrues}")
+    # features = extract_features(x, column_id='id', column_sort='time')
+    # print(features)
     #
-
-    from tsfresh.examples.robot_execution_failures import download_robot_execution_failures, load_robot_execution_failures
-
-    download_robot_execution_failures()
-    x, y = data = tsfresh.examples.load_robot_execution_failures()
-    print(x,'\n', y)
-
-    from tsfresh import extract_features
-    features = extract_features(x, column_id='id', column_sort='time')
-    print(features)
-
-    from tsfresh.utilities.dataframe_functions import impute
-    impute(features)
-
-    from tsfresh import select_features
-    filtered_features = select_features(features, y)
-    print(filtered_features)
-
-    from tsfresh import extract_relevant_features
-    r_features = extract_relevant_features(x, y, column_id='id', column_sort='time')
-    print(r_features)
-    """
+    # from tsfresh.utilities.dataframe_functions import impute
+    # impute(features)
+    #
+    # from tsfresh import select_features
+    # filtered_features = select_features(features, y)
+    # print(filtered_features)
+    #
+    # from tsfresh import extract_relevant_features
+    # r_features = extract_relevant_features(x, y, column_id='id', column_sort='time')
+    # print(r_features)

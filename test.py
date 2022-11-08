@@ -1,3 +1,5 @@
+import datetime
+
 import pandas as pd
 import numpy as np
 
@@ -14,4 +16,8 @@ print(df)
 # print(df.loc[0, 'B'])
 
 
+from datetime import datetime
+a = datetime(2022, 3, 22).date()
+b = datetime(2022, 3, 23).date()
+print(a<b)
 

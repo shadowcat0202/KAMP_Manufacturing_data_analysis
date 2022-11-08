@@ -50,31 +50,46 @@ class GlanceViz(DataPreprocess):
             df = df
 
         else: # 특정날짜로 조회하려는 경우
-            data_date = period.split('/') # 스플릿
-            month, day = map(int, data_date) # STR >> INT
-            user_date = datetime(2020, month, day).date() # Date 타입으로 변경
-            df = df[(df['DATE'] == user_date)] # 지정 날짜의 데이터 불러오기
+            data_date = period.split('-') # 스플릿
+            user_dates = []
+            for date in data_date:
+                extracted = date.split('/') # 스플릿
+                month, day = map(int, extracted) # STR >> INT
+                user_date = datetime(2020, month, day).date() # Date 타입으로 변경
+                user_dates.append(user_date)
 
-        """
-        STYLE 을 이용해서 시각화할 경우
-        import matplotlib.style as style
-        style.use('seaborn-colorblind')
-        ax1.scatter(x='DATE_TIME', y='OK', data= df[df['OK']==0], color = 'red', label = "NG", alpha=0.9, marker='X')
-        ax1.plot(df['DATE_TIME'], df[colName_feat1], label = colName_feat1, alpha=0.9)
-        ax2.plot(df['DATE_TIME'], df[colName_feat2], label=colName_feat2, alpha=0.2)
-        """
+            date_from, date_to = min(user_dates), max(user_dates)
+
+            df = df[(df['DATE'] >= date_from) & (df['DATE'] <= date_to)]  # 지정 날짜의 데이터 불러오기
 
         # 축 2개 생성
         ax1, ax2 = plt.gca(), plt.gca().twinx()
 
+        """
+        STYLE 을 이용해서 시각화할 경우
+        """
+        import matplotlib.style as style
+        style.use('seaborn-dark-palette')
+        # style.use('seaborn-colorblind')
         # NG는 Scatter로 표현
-        ax1.scatter(x='DATE_TIME', y='OK', data= df[df['OK']==0], color='red', label = "NG", alpha=0.9, marker='X')
+        ax1.scatter(x='DATE_TIME', y=colName_feat1, data= df[df['OK']==0], color = 'red', label = "NG", alpha=0.9, marker='X')
+        # Feature 1 Plot
+        ax1.plot(df['DATE_TIME'], df[colName_feat1], label = colName_feat1, alpha=0.2)
+        # Feature 2 Plot
+        ax2.plot(df['DATE_TIME'], df[colName_feat2], label=colName_feat2, alpha=0.7)
+
+        """
+        컬러 직접 지정할 경우
+
+        # NG는 Scatter로 표현
+        ax1.scatter(x='DATE_TIME', y=colName_feat1, data= df[df['OK']==0], color='red', label = "NG", alpha=0.9, marker='X')
 
         # Feature 1 Plot
         ax1.plot(df['DATE_TIME'], df[colName_feat1], color='black', label = colName_feat1, alpha=0.9)
 
         # Feature 2 Plot
         ax2.plot(df['DATE_TIME'], df[colName_feat2], color='y', label=colName_feat2, alpha=0.2)
+        """
 
 
         if drawLine_at[0] == 'ax1':
@@ -127,7 +142,14 @@ class GlanceViz(DataPreprocess):
         f.suptitle(f'{colName_feat} by date type data')
         plt.show()
 
+
     def plot_dfprcd_distribution(self, df, colName):
+        """
+        분포 그래프
+        :param df:
+        :param colName:
+        :return:
+        """
         sns.kdeplot(df[colName])
         plt.show()
 
@@ -135,14 +157,14 @@ class GlanceViz(DataPreprocess):
 gv = GlanceViz()
 
 # 특징별 분포 BOX PLOT
-gv.boxplot_feature_byTimeFormats(colName_feat='MELT_WEIGHT', load_dfORG=False)
+# gv.boxplot_feature_byTimeFormats(colName_feat='MELT_WEIGHT', load_dfORG=False)
 
 # 시간포맷에 따른 OK 확률 시각화
-gv.PLOT_DFPRCD_OKPROB_BYTIMEFORMATS()
+# gv.PLOT_DFPRCD_OKPROB_BYTIMEFORMATS()
 
 
 # 전체 기간 NG 조회
-gv.plot_NG_byTwoFeatures(colName_feat1='MELT_WEIGHT', colName_feat2='MELT_TEMP',period='ALL', drawLine_at=(None, None), y_min=(None, None), load_dfORG=False)
+# gv.plot_NG_byTwoFeatures(colName_feat1='MELT_WEIGHT', colName_feat2='MELT_TEMP',period='ALL', drawLine_at=(None, None), y_min=(None, None), load_dfORG=False)
 
 # 특정 날짜 NG 조회
-gv.plot_NG_byTwoFeatures(colName_feat1='MELT_WEIGHT', colName_feat2='MELT_TEMP',period='3/22', drawLine_at=('ax1', 50), y_min=(None, None), load_dfORG=False)
+gv.plot_NG_byTwoFeatures(colName_feat1='MELT_TEMP', colName_feat2='MELT_WEIGHT',period='3/22-3/23', drawLine_at=('ax1', 50), y_min=(None, None), load_dfORG=False)
